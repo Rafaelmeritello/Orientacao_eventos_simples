@@ -6,35 +6,47 @@ const rabbitUrl = 'amqp://user:password@rabbitmq:5672';
 let conexaoGlobal = null;
 let canalGlobal = null;
 
+let estaConectando = false; 
+
 async function conectar() {
+    
+    if (estaConectando) return; 
+    estaConectando = true;
+
     try {
-        console.log("Conectando");
+        console.log("Conectando...");
+
+        
+        if (conexaoGlobal) {
+            try { await conexaoGlobal.close(); } catch(e) {}
+            conexaoGlobal = null;
+        }
 
         conexaoGlobal = await amqp.connect(rabbitUrl);
-
         canalGlobal = await conexaoGlobal.createChannel();
-
         await canalGlobal.assertQueue('fila_precos', { durable: true });
 
         console.log("Conexão foi");
-
+        estaConectando = false; 
         conexaoGlobal.on('close', () => {
-            console.error("Conexão com  recnectar em em 5s...");
+            console.error("Conexão com RabbitMQ fechada! Reconectando em 5s...");
             canalGlobal = null;
+            conexaoGlobal = null;
             setTimeout(conectar, 5000);
         });
 
         conexaoGlobal.on('error', (err) => {
-            console.error(" Erro na conexão:", err.message);
+            console.error("Erro na conexão:", err.message);
         });
 
     } catch (erro) {
-        console.error(" Falha ao conectar", erro.message);
+        console.error("Falha ao conectar:", erro.message);
         canalGlobal = null;
+        conexaoGlobal = null;
+        estaConectando = false; 
         setTimeout(conectar, 5000);
     }
 }
-
 function enviarMensagemPreco() {
 
     if (!canalGlobal) {
@@ -57,6 +69,8 @@ function enviarMensagemPreco() {
     }
 }
 
-conectar();
+setTimeout(() => {
+    conectar();
+}, 10000);
 
 setInterval(enviarMensagemPreco, 5000);
