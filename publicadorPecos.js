@@ -1,1 +1,0 @@
-console.log('Publicador preços sendo executado')
