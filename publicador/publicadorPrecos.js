@@ -16,7 +16,7 @@ async function publicar() {
         const mensagem = JSON.stringify(dadosPreco);
         canal.sendToQueue(nomeFila, Buffer.from(mensagem), { persistent: true });
         console.log("Conexão fechada com sucesso.");
-    }catch{
+    }catch(erro){
 console.error("Erro ao publicar mensagem:", erro);
     }
 }
