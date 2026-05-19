@@ -2,7 +2,7 @@ services:
   publicador:
     build:
       context: ./publicador
-      dockerfile: Dockerfike
+      dockerfile: Dockerfile
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
