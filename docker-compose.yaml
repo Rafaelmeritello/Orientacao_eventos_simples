@@ -4,13 +4,13 @@ services:
       context: ./publicador
       dockerfile: Dockerfile
     depends_on:
-     -rabbitmq
+     - rabbitmq
   consumidor:
     build:
       context: ./consumidor
       dockerfile: Dockerfile
     depends_on:
-     -rabbitmq
+     - rabbitmq
     
   rabbitmq:
     image: rabbitmq:3-management-alpine
