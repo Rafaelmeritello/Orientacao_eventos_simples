@@ -1,4 +1,5 @@
 console.log('Detector preços sendo executado')
+const EventEmitter = require('events');
 setInterval(() => {}, 1000 * 60 * 60);
 const amqp = require('amqplib');
 const rabbitUrl = 'amqp://user:password@rabbitmq:5672';
