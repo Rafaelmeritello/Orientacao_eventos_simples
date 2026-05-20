@@ -56,4 +56,7 @@ async function consumir_fila(){
 setTimeout(() => {
     conectar();
 }, 15000);
-consumir_fila();
+
+setTimeout(() => {
+   consumir_fila();
+}, 21000);

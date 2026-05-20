@@ -61,6 +61,6 @@ function enviarMensagemPreco() {
 
 setTimeout(() => {
     conectar();
-}, 12000);
+}, 15000);
 
-setInterval(enviarMensagemPreco, 5000);
+setInterval(enviarMensagemPreco, 8000);
