@@ -28,16 +28,6 @@ async function conectar() {
 
         console.log("Conexão foi");
         estaConectando = false; 
-        conexaoGlobal.on('close', () => {
-            console.error("Conexão com RabbitMQ fechada! Reconectando em 5s...");
-            canalGlobal = null;
-            conexaoGlobal = null;
-            setTimeout(conectar, 5000);
-        });
-
-        conexaoGlobal.on('error', (err) => {
-            console.error("Erro na conexão:", err.message);
-        });
 
     } catch (erro) {
         console.error("Falha ao conectar:", erro.message);
@@ -71,6 +61,6 @@ function enviarMensagemPreco() {
 
 setTimeout(() => {
     conectar();
-}, 10000);
+}, 12000);
 
 setInterval(enviarMensagemPreco, 5000);
