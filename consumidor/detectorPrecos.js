@@ -2,7 +2,7 @@ console.log('Detector preços sendo executado')
 setInterval(() => {}, 1000 * 60 * 60);
 const amqp = require('amqplib');
 const rabbitUrl = 'amqp://user:password@rabbitmq:5672';
-
+const sinal = new EventEmitter()
 let conexaoGlobal = null;
 let canalGlobal = null;
 
@@ -27,6 +27,7 @@ async function conectar() {
         await canalGlobal.assertQueue('fila_precos', { durable: true });
 
         console.log("Conexão foi");
+        sinal.emit('tudo_pronto')
         estaConectando = false; 
 
     } catch (erro) {
@@ -43,7 +44,8 @@ async function consumir_fila(){
     await canalGlobal.assertQueue('fila_precos',{ durable: true })
     canalGlobal.consume('fila_precos',(msg)=>{
         if(msg !=null){
-            console.log('mensagem aqui',msg)
+            let mensagem = (msg.content).toString('utf8')
+            console.log('mensagem aqui',JSON.parse(mensagem))
            canalGlobal.ack(msg)
         }
     })
@@ -55,8 +57,8 @@ async function consumir_fila(){
 
 setTimeout(() => {
     conectar();
-}, 15000);
+}, 17000);
 
-setTimeout(() => {
-   consumir_fila();
-}, 21000);
+sinal.on('tudo_pronto', () => {
+    consumir_fila();
+});
